@@ -9,7 +9,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.goalfeed.MainMenu
+import com.example.goalfeed.home.MainMenu
 import com.example.goalfeed.favourite.Favorite
 import com.example.goalfeed.matches.Matches
 import com.example.goalfeed.tabs.Basic
@@ -42,12 +42,13 @@ fun NavHostComposable(innerPadding: PaddingValues, navController: NavHostControl
         composable(route = GoalFeedScreen.Favorite.name) {
             Favorite()
         }
-        composable(route = GoalFeedScreen.Profile.name) {
-            User()
-        }
 
         composable(route = GoalFeedScreen.Matches.name) {
             Matches()
+        }
+
+        composable(route = GoalFeedScreen.Profile.name) {
+            User()
         }
 
         composable(route = GoalFeedScreen.Basics.name) {
