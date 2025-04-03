@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun Matches(onClick: (MatchItem) -> Unit) {
+fun Matches() {
     val matches = listOf(
         MatchItem("Tue, Apr 2", "21:00", "Real Madrid", "Manchester City", 3, 3, "FT"),
         MatchItem("Wed, Apr 3", "21:00", "Arsenal", "Bayern Munich", 2, 2, "FT"),
@@ -30,9 +30,7 @@ fun Matches(onClick: (MatchItem) -> Unit) {
         modifier = Modifier.padding(vertical = 16.dp)
     ) {
         items(matches) { matchItem ->
-            MatchCard(matchItem = matchItem) {
-                onClick(matchItem)
-            }
+            MatchCard(matchItem)
         }
     }
 }

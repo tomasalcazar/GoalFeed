@@ -12,7 +12,7 @@ import com.example.goalfeed.ui.theme.*
 import androidx.compose.material3.Text
 
 @Composable
-fun MatchCard(matchItem: MatchItem, onClick: () -> Unit) {
+fun MatchCard(matchItem: MatchItem) {
     val statusColor = when (matchItem.status) {
         "Live" -> RedLive
         "FT" -> GrayFT
@@ -22,8 +22,7 @@ fun MatchCard(matchItem: MatchItem, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp)
-            .clickable { onClick() },
+            .padding(horizontal = 16.dp),
         elevation = CardDefaults.cardElevation(8.dp),
         colors = CardDefaults.cardColors(containerColor = LightCardBackground)
     ) {
