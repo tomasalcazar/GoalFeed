@@ -1,6 +1,5 @@
 package com.example.goalfeed.home
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -10,11 +9,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.example.goalfeed.R
 import com.example.goalfeed.ui.theme.*
 import androidx.compose.material3.Text
+import coil3.compose.AsyncImage
 
 @Composable
 fun NewsCard(newsItem: NewsItem, onClick: () -> Unit) {
@@ -28,14 +26,14 @@ fun NewsCard(newsItem: NewsItem, onClick: () -> Unit) {
         colors = CardDefaults.cardColors(containerColor = LightCardBackground)
     ) {
         Column {
-            Image(
-                painter = painterResource(id = R.drawable.juanfer),
+            AsyncImage(
+                model = newsItem.imageUrl,
                 contentDescription = "News image",
+                contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(180.dp)
-                    .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
-                contentScale = ContentScale.Crop
+                    .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
             )
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(
