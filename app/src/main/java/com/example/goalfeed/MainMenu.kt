@@ -15,7 +15,7 @@ import com.example.goalfeed.home.NewsItem
 
 @Composable
 fun MainMenu(onClick: (String) -> Unit) {
-    val newsList = listOf(
+    val news = listOf(
         NewsItem(
             title = "Messi Scores Stunning Free Kick in MLS Clash",
             source = "ESPN",
@@ -63,7 +63,7 @@ fun MainMenu(onClick: (String) -> Unit) {
                 .align(Alignment.CenterHorizontally)
                 .padding(vertical = 20.dp)
         )
-        NewsFeed(newsList) {
+        NewsFeed(news) {
             onClick(it.title)
         }
     }

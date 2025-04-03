@@ -1,5 +1,6 @@
 package com.example.goalfeed.matches
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -11,8 +12,8 @@ import com.example.goalfeed.ui.theme.*
 import androidx.compose.material3.Text
 
 @Composable
-fun MatchCard(match: MatchItem) {
-    val statusColor = when (match.status) {
+fun MatchCard(matchItem: MatchItem, onClick: () -> Unit) {
+    val statusColor = when (matchItem.status) {
         "Live" -> RedLive
         "FT" -> GrayFT
         else -> BlueUpcoming
@@ -21,14 +22,15 @@ fun MatchCard(match: MatchItem) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp),
+            .padding(horizontal = 16.dp)
+            .clickable { onClick() },
         elevation = CardDefaults.cardElevation(8.dp),
         colors = CardDefaults.cardColors(containerColor = LightCardBackground)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
 
             Text(
-                text = match.date,
+                text = matchItem.date,
                 style = LabelSmallMedium,
                 color = BlueUpcoming
             )
@@ -41,12 +43,12 @@ fun MatchCard(match: MatchItem) {
             ) {
                 Column {
                     Text(
-                        text = match.homeTeam,
+                        text = matchItem.homeTeam,
                         style = BodyLargeSemiBold,
                         color = CardTextPrimary
                     )
                     Text(
-                        text = match.awayTeam,
+                        text = matchItem.awayTeam,
                         style = BodyLargeSemiBold,
                         color = CardTextPrimary
                     )
@@ -54,14 +56,14 @@ fun MatchCard(match: MatchItem) {
 
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
-                        text = if (match.homeScore != null && match.awayScore != null)
-                            "${match.homeScore} - ${match.awayScore}"
-                        else match.time,
+                        text = if (matchItem.homeScore != null && matchItem.awayScore != null)
+                            "${matchItem.homeScore} - ${matchItem.awayScore}"
+                        else matchItem.time,
                         style = TitleMediumBold,
                         color = CardTextPrimary
                     )
                     Text(
-                        text = match.status,
+                        text = matchItem.status,
                         style = LabelSmallMedium,
                         color = statusColor
                     )
