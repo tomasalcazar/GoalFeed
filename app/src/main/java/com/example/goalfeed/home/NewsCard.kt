@@ -4,15 +4,17 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.goalfeed.R
+import com.example.goalfeed.ui.theme.*
+import androidx.compose.material3.Text
 
 @Composable
 fun NewsCard(newsItem: NewsItem, onClick: () -> Unit) {
@@ -22,7 +24,8 @@ fun NewsCard(newsItem: NewsItem, onClick: () -> Unit) {
             .padding(horizontal = 16.dp)
             .clickable { onClick() },
         shape = RoundedCornerShape(16.dp),
-        elevation = CardDefaults.cardElevation(16.dp)
+        elevation = CardDefaults.cardElevation(16.dp),
+        colors = CardDefaults.cardColors(containerColor = LightCardBackground)
     ) {
         Column {
             Image(
@@ -35,11 +38,23 @@ fun NewsCard(newsItem: NewsItem, onClick: () -> Unit) {
                 contentScale = ContentScale.Crop
             )
             Column(modifier = Modifier.padding(16.dp)) {
-                Text(newsItem.title, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                Text(
+                    text = newsItem.title,
+                    style = TitleMediumBold,
+                    color = CardTextPrimary
+                )
                 Spacer(modifier = Modifier.height(4.dp))
-                Text(newsItem.source, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary)
+                Text(
+                    text = newsItem.source,
+                    style = LabelSmallMedium,
+                    color = BlueUpcoming
+                )
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(newsItem.description, style = MaterialTheme.typography.bodySmall)
+                Text(
+                    text = newsItem.description,
+                    style = BodySmallRegular,
+                    color = CardTextSecondary
+                )
             }
         }
     }

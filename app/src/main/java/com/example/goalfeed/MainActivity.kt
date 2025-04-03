@@ -10,7 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
-import com.example.goalfeed.home.MainMenu
 import com.example.goalfeed.navigation.BottomBar
 import com.example.goalfeed.navigation.NavHostComposable
 import com.example.goalfeed.ui.theme.GoalFeedTheme

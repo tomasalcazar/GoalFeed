@@ -1,4 +1,4 @@
-package com.example.goalfeed.home
+package com.example.goalfeed
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -10,6 +10,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.goalfeed.home.NewsFeed
+import com.example.goalfeed.home.NewsItem
 
 @Composable
 fun MainMenu(onClick: (String) -> Unit) {

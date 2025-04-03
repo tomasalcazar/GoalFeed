@@ -9,7 +9,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.goalfeed.home.MainMenu
+import com.example.goalfeed.MainMenu
 import com.example.goalfeed.favourite.Favorite
 import com.example.goalfeed.matches.Matches
 import com.example.goalfeed.tabs.Basic
