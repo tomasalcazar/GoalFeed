@@ -1,6 +1,7 @@
 package com.example.goalfeed.matches
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -29,8 +30,10 @@ fun Matches() {
         verticalArrangement = Arrangement.spacedBy(12.dp),
         modifier = Modifier.padding(vertical = 16.dp)
     ) {
+        item { Spacer(Modifier.padding(0.2.dp)) }
         items(matches) { matchItem ->
             MatchCard(matchItem)
         }
+        item {Spacer(Modifier.padding(0.2.dp))}
     }
 }

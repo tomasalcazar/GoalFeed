@@ -55,14 +55,14 @@ fun MainMenu(onClick: (String) -> Unit) {
     )
 
     Column {
-        Text(
-            "Home",
-            fontSize = 34.sp,
-            fontWeight = FontWeight.SemiBold,
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .padding(vertical = 20.dp)
-        )
+//        Text(
+//            "Home",
+//            fontSize = 34.sp,
+//            fontWeight = FontWeight.SemiBold,
+//            modifier = Modifier
+//                .align(Alignment.CenterHorizontally)
+//                .padding(vertical = 20.dp)
+//        )
         NewsFeed(news) {
             onClick(it.title)
         }

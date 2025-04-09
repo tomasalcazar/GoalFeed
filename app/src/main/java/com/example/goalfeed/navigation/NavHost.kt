@@ -32,7 +32,13 @@ fun NavHostComposable(innerPadding: PaddingValues, navController: NavHostControl
     NavHost(
         navController = navController,
         startDestination = GoalFeedScreen.Home.name,
-        modifier = Modifier.fillMaxSize().padding(innerPadding).padding(20.dp)
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(
+                start = 16.dp,
+                end = 16.dp,
+                top = 64.dp,
+                bottom = 0.dp)
     ) {
         composable(route = GoalFeedScreen.Home.name) {
             MainMenu(

@@ -7,5 +7,5 @@ data class MatchItem (
     val awayTeam: String,
     val homeScore: Int?,
     val awayScore: Int?,
-    val status: String // "Live", "FT", "Upcoming"
+    val status: String, // "Live", "FT", "Upcoming"
 )

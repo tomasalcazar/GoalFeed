@@ -8,7 +8,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
-
 @Composable
 fun NewsFeed(newsList: List<NewsItem>, onClick: (NewsItem) -> Unit) {
     LazyColumn(
@@ -18,10 +17,12 @@ fun NewsFeed(newsList: List<NewsItem>, onClick: (NewsItem) -> Unit) {
             .fillMaxSize()
             .padding(vertical = 16.dp)
     ) {
+        item { Spacer(Modifier.padding(0.2.dp)) }
         items(newsList) { newsItem ->
             NewsCard(newsItem = newsItem) {
                 onClick(newsItem)
             }
         }
+        item { Spacer(Modifier.padding(0.2.dp)) }
     }
 }
