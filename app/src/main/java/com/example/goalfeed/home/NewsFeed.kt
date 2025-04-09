@@ -23,6 +23,6 @@ fun NewsFeed(newsList: List<NewsItem>, onClick: (NewsItem) -> Unit) {
                 onClick(newsItem)
             }
         }
-        item { Spacer(Modifier.padding(0.2.dp)) }
+        item { Spacer(Modifier.padding(48.dp)) }
     }
 }

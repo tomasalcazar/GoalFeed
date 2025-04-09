@@ -36,6 +36,6 @@ fun Favorite() {
         items(favoriteMatches) { matchItem ->
             MatchCard(matchItem = matchItem)
         }
-        item { Spacer(Modifier.padding(0.2.dp)) }
+        item { Spacer(Modifier.padding(64.dp)) }
     }
 }

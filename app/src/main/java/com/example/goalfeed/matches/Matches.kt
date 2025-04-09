@@ -34,6 +34,6 @@ fun Matches() {
         items(matches) { matchItem ->
             MatchCard(matchItem)
         }
-        item {Spacer(Modifier.padding(0.2.dp))}
+        item {Spacer(Modifier.padding(48.dp))}
     }
 }
