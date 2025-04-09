@@ -13,8 +13,11 @@ import androidx.navigation.compose.rememberNavController
 import com.example.goalfeed.navigation.BottomBar
 import com.example.goalfeed.navigation.NavHostComposable
 import com.example.goalfeed.ui.theme.GoalFeedTheme
+import androidx.fragment.app.FragmentActivity
+import dagger.hilt.android.AndroidEntryPoint
 
-class MainActivity : ComponentActivity() {
+@AndroidEntryPoint
+class MainActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
