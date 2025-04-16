@@ -27,7 +27,7 @@ fun NewsCard(newsItem: NewsItem, onClick: () -> Unit) {
     ) {
         Column {
             AsyncImage(
-                model = newsItem.imageUrl,
+                model = newsItem.urlToImage,
                 contentDescription = "News image",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -43,16 +43,18 @@ fun NewsCard(newsItem: NewsItem, onClick: () -> Unit) {
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = newsItem.source,
+                    text = newsItem.source.name,
                     style = LabelSmallMedium,
                     color = BlueUpcoming
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = newsItem.description,
-                    style = BodySmallRegular,
-                    color = CardTextSecondary
-                )
+                newsItem.description?.let {
+                    Text(
+                        text = it,
+                        style = BodySmallRegular,
+                        color = CardTextSecondary
+                    )
+                }
             }
         }
     }
