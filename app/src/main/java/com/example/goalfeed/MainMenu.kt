@@ -11,7 +11,7 @@ import com.example.goalfeed.home.NewsFeed
 import com.example.goalfeed.view.models.NewsViewModel
 
 @Composable
-fun MainMenu(onClick: (String) -> Unit) {
+fun MainMenu(onClick: (Int) -> Unit) {
     val viewModel = hiltViewModel<NewsViewModel>()
     val news by viewModel.news.collectAsState()
     val loading by viewModel.loading.collectAsState()
@@ -45,8 +45,9 @@ fun MainMenu(onClick: (String) -> Unit) {
             }
 
             else -> {
-                NewsFeed(newsList = news) {
-                    onClick(it.title)
+                NewsFeed(newsList = news) { newsItem ->
+                    val index = news.indexOf(newsItem)
+                    onClick(index)
                 }
             }
         }

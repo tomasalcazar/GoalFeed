@@ -4,7 +4,8 @@ data class NewsItem(
     val title: String,
     val source: Source,
     val urlToImage: String?,
-    val description: String?
+    val description: String?,
+    val content: String?
 )
 
 data class Source(

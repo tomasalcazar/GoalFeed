@@ -7,11 +7,10 @@ import retrofit.http.Query
 
 interface ApiService {
     @GET("everything")
-    fun getPremierLeagueNews(
+    fun getNews(
         @Query("q") query: String = "Premier League",
         @Query("language") language: String = "en",
         @Query("sortBy") sortBy: String = "publishedAt",
         @Query("apiKey") apiKey: String
     ): Call<NewsApiResponse>
 }
-

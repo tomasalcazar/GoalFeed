@@ -25,7 +25,7 @@ class ApiServiceImpl @Inject constructor() {
 
         val apiKey = context.getString(R.string.news_api_key)
 
-        val call: Call<NewsApiResponse> = service.getPremierLeagueNews(apiKey = apiKey)
+        val call: Call<NewsApiResponse> = service.getNews(apiKey = apiKey)
 
         call.enqueue(object : Callback<NewsApiResponse> {
             override fun onResponse(response: Response<NewsApiResponse>?, retrofit: Retrofit?) {
