@@ -15,10 +15,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.goalfeed.MainMenu
-import com.example.goalfeed.matches.Matches
 import com.example.goalfeed.favorite.Favorite
+import com.example.goalfeed.matches.Matches
+import com.example.goalfeed.matches.MatchDetail
 import com.example.goalfeed.profile.User
 import com.example.goalfeed.tabs.*
+import com.example.goalfeed.view.models.MatchesViewModel
 import com.example.goalfeed.view.models.NewsViewModel
 
 @Composable
@@ -33,50 +35,71 @@ fun NavHostComposable(
             .fillMaxSize()
             .padding(innerPadding)
     ) {
-        composable(route = GoalFeedScreen.Home.name) {
-            MainMenu(
-                onClick = { index ->
-                    navController.navigate("${GoalFeedScreen.Detail.name}/$index")
+        composable(GoalFeedScreen.Home.name) {
+            MainMenu { index ->
+                navController.navigate("${GoalFeedScreen.NewsDetail.name}/$index")
+            }
+        }
+        
+        composable(GoalFeedScreen.Favorite.name) {
+            Favorite()
+        }
+        
+        composable(GoalFeedScreen.Matches.name) {
+            val vm: MatchesViewModel = hiltViewModel()
+            val matches by vm.matches.collectAsState()
+            val loading by vm.loading.collectAsState()
+            val showRetry by vm.showRetry.collectAsState()
+
+            Matches(
+                viewModel     = vm,
+                onMatchClick  = { index ->
+                    navController.navigate("${GoalFeedScreen.MatchDetail.name}/$index")
                 }
             )
         }
-
-        composable(route = GoalFeedScreen.Favorite.name) {
-            Favorite()
-        }
-
-        composable(route = GoalFeedScreen.Matches.name) {
-            Matches()
-        }
-
-        composable(route = GoalFeedScreen.Profile.name) {
-            User()
-        }
-
-        composable(route = GoalFeedScreen.Basics.name) { Basic(onClick = { navController.navigate(it) }) }
-        composable(route = GoalFeedScreen.Texts.name) { Texts() }
-        composable(route = GoalFeedScreen.Buttons.name) { Buttons() }
-        composable(route = GoalFeedScreen.Columns.name) { Columns() }
-        composable(route = GoalFeedScreen.Rows.name) { Rows() }
-        composable(route = GoalFeedScreen.Cards.name) { Cards() }
-        composable(route = GoalFeedScreen.Icons.name) { Icons() }
-        composable(route = GoalFeedScreen.Chips.name) { Chips() }
-        composable(route = GoalFeedScreen.Switches.name) { Switches() }
-        composable(route = GoalFeedScreen.Tabs.name) { Tabs() }
-        composable(route = GoalFeedScreen.FABs.name) { FABs() }
-        composable(route = GoalFeedScreen.Checkboxes.name) { Checkboxes() }
-
+        
         composable(
-            route = "${GoalFeedScreen.Detail.name}/{index}",
+            route = "${GoalFeedScreen.MatchDetail.name}/{index}",
             arguments = listOf(navArgument("index") { type = NavType.IntType })
         ) { backStackEntry ->
-            val viewModel = hiltViewModel<NewsViewModel>()
-            val news by viewModel.news.collectAsState()
-            val index = backStackEntry.arguments?.getInt("index") ?: 0
-            news.getOrNull(index)?.let { newsItem ->
-                NewsDetail(newsItem = newsItem) {
-                    navController.popBackStack()
-                }
+            val vm: MatchesViewModel = hiltViewModel()
+            val matches by vm.matches.collectAsState()
+            val idx = backStackEntry.arguments?.getInt("index") ?: 0
+            matches.getOrNull(idx)?.let { match ->
+                MatchDetail(match)
+            }
+        }
+        
+        composable(GoalFeedScreen.Profile.name) {
+            User()
+        }
+        
+        composable(GoalFeedScreen.Basics.name)   { Basic(onClick = { navController.navigate(it) }) }
+        composable(GoalFeedScreen.Texts.name)    { Texts() }
+        composable(GoalFeedScreen.Buttons.name)  { Buttons() }
+        composable(GoalFeedScreen.Columns.name)  { Columns() }
+        composable(GoalFeedScreen.Rows.name)     { Rows() }
+        composable(GoalFeedScreen.Cards.name)    { Cards() }
+        composable(GoalFeedScreen.Icons.name)    { Icons() }
+        composable(GoalFeedScreen.Chips.name)    { Chips() }
+        composable(GoalFeedScreen.Switches.name) { Switches() }
+        composable(GoalFeedScreen.Tabs.name)     { Tabs() }
+        composable(GoalFeedScreen.FABs.name)     { FABs() }
+        composable(GoalFeedScreen.Checkboxes.name) { Checkboxes() }
+        
+        composable(
+            route = "${GoalFeedScreen.NewsDetail.name}/{index}",
+            arguments = listOf(navArgument("index") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val vm: NewsViewModel = hiltViewModel()
+            val news by vm.news.collectAsState()
+            val idx = backStackEntry.arguments?.getInt("index") ?: 0
+            news.getOrNull(idx)?.let { item ->
+                NewsDetail(
+                    newsItem = item,
+                    onBack = { navController.popBackStack() }
+                )
             }
         }
     }

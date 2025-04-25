@@ -1,8 +1,9 @@
 package com.example.goalfeed.matches
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
@@ -16,9 +17,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.goalfeed.view.models.MatchesViewModel
 
 @Composable
-fun Matches(viewModel: MatchesViewModel = hiltViewModel()) {
-    val matches by viewModel.matches.collectAsState()
-    val loading by viewModel.loading.collectAsState()
+fun Matches(
+    viewModel: MatchesViewModel = hiltViewModel(),
+    onMatchClick: (Int) -> Unit
+) {
+    val matches   by viewModel.matches.collectAsState()
+    val loading   by viewModel.loading.collectAsState()
     val showRetry by viewModel.showRetry.collectAsState()
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -40,8 +44,14 @@ fun Matches(viewModel: MatchesViewModel = hiltViewModel()) {
                     contentPadding = PaddingValues(top = 16.dp, bottom = 32.dp),
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    items(matches) { matchItem ->
-                        MatchCard(matchItem)
+                    itemsIndexed(matches) { index, matchItem ->
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { onMatchClick(index) }
+                        ) {
+                            MatchCard(matchItem)
+                        }
                     }
                     item { Spacer(modifier = Modifier.height(48.dp)) }
                 }
