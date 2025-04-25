@@ -8,9 +8,9 @@ import com.example.goalfeed.home.NewsItem
 import retrofit.*
 import javax.inject.Inject
 
-class ApiServiceImpl @Inject constructor() {
+class NewsApiServiceImpl @Inject constructor() {
 
-    fun getPremierLeagueNews(
+    fun getNews(
         context: Context,
         onSuccess: (List<NewsItem>) -> Unit,
         onFail: () -> Unit,
@@ -21,7 +21,7 @@ class ApiServiceImpl @Inject constructor() {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-        val service: ApiService = retrofit.create(ApiService::class.java)
+        val service: NewsApiService = retrofit.create(NewsApiService::class.java)
 
         val apiKey = context.getString(R.string.news_api_key)
 

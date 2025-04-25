@@ -8,7 +8,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -16,25 +15,23 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.goalfeed.MainMenu
-import com.example.goalfeed.favorite.Favorite
 import com.example.goalfeed.matches.Matches
+import com.example.goalfeed.favorite.Favorite
 import com.example.goalfeed.profile.User
 import com.example.goalfeed.tabs.*
 import com.example.goalfeed.view.models.NewsViewModel
 
 @Composable
-fun NavHostComposable(innerPadding: PaddingValues, navController: NavHostController) {
+fun NavHostComposable(
+    innerPadding: PaddingValues,
+    navController: NavHostController
+) {
     NavHost(
         navController = navController,
         startDestination = GoalFeedScreen.Home.name,
         modifier = Modifier
             .fillMaxSize()
-            .padding(
-                start = 16.dp,
-                end = 16.dp,
-                top = 64.dp,
-                bottom = 0.dp
-            )
+            .padding(innerPadding)
     ) {
         composable(route = GoalFeedScreen.Home.name) {
             MainMenu(
@@ -68,16 +65,16 @@ fun NavHostComposable(innerPadding: PaddingValues, navController: NavHostControl
         composable(route = GoalFeedScreen.Tabs.name) { Tabs() }
         composable(route = GoalFeedScreen.FABs.name) { FABs() }
         composable(route = GoalFeedScreen.Checkboxes.name) { Checkboxes() }
+
         composable(
-            route = GoalFeedScreen.Detail.name + "/{index}",
+            route = "${GoalFeedScreen.Detail.name}/{index}",
             arguments = listOf(navArgument("index") { type = NavType.IntType })
         ) { backStackEntry ->
             val viewModel = hiltViewModel<NewsViewModel>()
             val news by viewModel.news.collectAsState()
             val index = backStackEntry.arguments?.getInt("index") ?: 0
-            val newsItem = news.getOrNull(index)
-            newsItem?.let {
-                NewsDetail(newsItem = it) {
+            news.getOrNull(index)?.let { newsItem ->
+                NewsDetail(newsItem = newsItem) {
                     navController.popBackStack()
                 }
             }

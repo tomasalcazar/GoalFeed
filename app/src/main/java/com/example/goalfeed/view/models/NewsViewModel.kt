@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.goalfeed.home.NewsItem
-import com.example.goalfeed.util.ApiServiceImpl
+import com.example.goalfeed.util.NewsApiServiceImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,7 +15,7 @@ import javax.inject.Inject
 @HiltViewModel
 class NewsViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val apiServiceImpl: ApiServiceImpl,
+    private val apiServiceImpl: NewsApiServiceImpl,
 ) : ViewModel() {
 
     private val _news = MutableStateFlow<List<NewsItem>>(emptyList())
@@ -37,7 +37,7 @@ class NewsViewModel @Inject constructor(
 
     private fun loadNews() {
         _loading.value = true
-        apiServiceImpl.getPremierLeagueNews(
+        apiServiceImpl.getNews(
             context = context,
             onSuccess = {
                 viewModelScope.launch { _news.emit(it) }
