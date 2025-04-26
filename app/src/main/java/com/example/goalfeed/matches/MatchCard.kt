@@ -7,7 +7,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import com.example.goalfeed.ui.theme.*
 
 @Composable
@@ -27,18 +26,18 @@ fun MatchCard(matchItem: Match) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+            .padding(horizontal = paddingLarge),
+        elevation = CardDefaults.cardElevation(defaultElevation = elevationLarge),
         colors = CardDefaults.cardColors(containerColor = LightCardBackground)
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
+        Column(modifier = Modifier.padding(paddingLarge)) {
             Text(
                 text = dateText,
                 style = LabelSmallMedium,
                 color = BlueUpcoming
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(heightSmall))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),

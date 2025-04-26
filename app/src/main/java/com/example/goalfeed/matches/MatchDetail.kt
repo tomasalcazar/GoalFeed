@@ -10,7 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import com.example.goalfeed.ui.theme.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -25,7 +25,7 @@ fun MatchDetail(matchItem: Match) {
         Column(
             modifier = Modifier
                 .padding(innerPadding)
-                .padding(16.dp)
+                .padding(paddingLarge)
                 .fillMaxSize()
         ) {
             val date = matchItem.utcDate.substringBefore("T")
@@ -35,15 +35,15 @@ fun MatchDetail(matchItem: Match) {
                 .take(5)
 
             Text(text = "Date: $date", style = MaterialTheme.typography.labelLarge)
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(heightSmall))
             Text(text = "Time: $time", style = MaterialTheme.typography.labelLarge)
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(heightLarge))
 
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                elevation = CardDefaults.cardElevation(defaultElevation = paddingExtraSmall)
             ) {
-                Column(modifier = Modifier.padding(16.dp)) {
+                Column(modifier = Modifier.padding(paddingLarge)) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
@@ -51,7 +51,7 @@ fun MatchDetail(matchItem: Match) {
                         Text(text = matchItem.homeTeam.name, style = MaterialTheme.typography.titleLarge)
                         Text(text = matchItem.score.fullTime.home?.toString() ?: "-", style = MaterialTheme.typography.titleLarge)
                     }
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(paddingSmall))
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
@@ -62,7 +62,7 @@ fun MatchDetail(matchItem: Match) {
                 }
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(paddingLarge))
             Text(text = "Status: ${matchItem.status}", style = MaterialTheme.typography.bodyMedium)
         }
     }

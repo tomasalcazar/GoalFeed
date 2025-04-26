@@ -19,7 +19,6 @@ import com.example.goalfeed.favorite.Favorite
 import com.example.goalfeed.matches.Matches
 import com.example.goalfeed.matches.MatchDetail
 import com.example.goalfeed.profile.User
-import com.example.goalfeed.tabs.*
 import com.example.goalfeed.view.models.MatchesViewModel
 import com.example.goalfeed.view.models.NewsViewModel
 
@@ -74,19 +73,6 @@ fun NavHostComposable(
         composable(GoalFeedScreen.Profile.name) {
             User()
         }
-        
-        composable(GoalFeedScreen.Basics.name)   { Basic(onClick = { navController.navigate(it) }) }
-        composable(GoalFeedScreen.Texts.name)    { Texts() }
-        composable(GoalFeedScreen.Buttons.name)  { Buttons() }
-        composable(GoalFeedScreen.Columns.name)  { Columns() }
-        composable(GoalFeedScreen.Rows.name)     { Rows() }
-        composable(GoalFeedScreen.Cards.name)    { Cards() }
-        composable(GoalFeedScreen.Icons.name)    { Icons() }
-        composable(GoalFeedScreen.Chips.name)    { Chips() }
-        composable(GoalFeedScreen.Switches.name) { Switches() }
-        composable(GoalFeedScreen.Tabs.name)     { Tabs() }
-        composable(GoalFeedScreen.FABs.name)     { FABs() }
-        composable(GoalFeedScreen.Checkboxes.name) { Checkboxes() }
         
         composable(
             route = "${GoalFeedScreen.NewsDetail.name}/{index}",

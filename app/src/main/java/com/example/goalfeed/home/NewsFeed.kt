@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.goalfeed.ui.theme.*
 
 @Composable
 fun NewsFeed(newsList: List<NewsItem>, onClick: (NewsItem) -> Unit) {
@@ -15,14 +16,14 @@ fun NewsFeed(newsList: List<NewsItem>, onClick: (NewsItem) -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
-            .padding(vertical = 16.dp)
+            .padding(vertical = paddingLarge)
     ) {
-        item { Spacer(Modifier.padding(0.2.dp)) }
+        item { Spacer(Modifier.padding(paddingXXS)) }
         items(newsList) { newsItem ->
             NewsCard(newsItem = newsItem) {
                 onClick(newsItem)
             }
         }
-        item { Spacer(Modifier.padding(48.dp)) }
+        item { Spacer(Modifier.padding(paddingXXL)) }
     }
 }

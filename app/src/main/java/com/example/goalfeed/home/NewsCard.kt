@@ -9,7 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.unit.dp
 import com.example.goalfeed.ui.theme.*
 import androidx.compose.material3.Text
 import coil3.compose.AsyncImage
@@ -19,10 +18,10 @@ fun NewsCard(newsItem: NewsItem, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp)
+            .padding(horizontal = paddingLarge)
             .clickable { onClick() },
-        shape = RoundedCornerShape(16.dp),
-        elevation = CardDefaults.cardElevation(16.dp),
+        shape = RoundedCornerShape(heightLarge),
+        elevation = CardDefaults.cardElevation(elevationLarge),
         colors = CardDefaults.cardColors(containerColor = LightCardBackground)
     ) {
         Column {
@@ -32,22 +31,22 @@ fun NewsCard(newsItem: NewsItem, onClick: () -> Unit) {
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(180.dp)
-                    .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
+                    .height(height180)
+                    .clip(RoundedCornerShape(topStart = heightLarge, topEnd = heightLarge))
             )
-            Column(modifier = Modifier.padding(16.dp)) {
+            Column(modifier = Modifier.padding(paddingLarge)) {
                 Text(
                     text = newsItem.title,
                     style = TitleMediumBold,
                     color = CardTextPrimary
                 )
-                Spacer(modifier = Modifier.height(4.dp))
+                Spacer(modifier = Modifier.height(heightExtraSmall))
                 Text(
                     text = newsItem.source.name,
                     style = LabelSmallMedium,
-                    color = BlueUpcoming
+                    color = CardTextBlue
                 )
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(heightSmall))
                 newsItem.description?.let {
                     Text(
                         text = it,

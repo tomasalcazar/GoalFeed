@@ -14,6 +14,7 @@ val Pink40 = Color(0xFF7D5260)
 // Neutral & Text Colors
 val CardTextPrimary = Color(0xFF000000)
 val CardTextSecondary = Color(0xFF757575)
+val CardTextBlue = Color(0xFF3F51B5)
 val LightCardBackground = Color(0xFFF0F1FF)
 
 // Status Colors

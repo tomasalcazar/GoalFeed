@@ -12,8 +12,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.goalfeed.ui.theme.*
 import com.example.goalfeed.view.models.MatchesViewModel
 
 @Composable
@@ -40,8 +40,8 @@ fun Matches(
             }
             else -> {
                 LazyColumn(
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
-                    contentPadding = PaddingValues(top = 16.dp, bottom = 32.dp),
+                    verticalArrangement = Arrangement.spacedBy(spacingMedium),
+                    contentPadding = PaddingValues(top = paddingLarge, bottom = paddingExtraLarge),
                     modifier = Modifier.fillMaxSize()
                 ) {
                     itemsIndexed(matches) { index, matchItem ->
@@ -53,7 +53,7 @@ fun Matches(
                             MatchCard(matchItem)
                         }
                     }
-                    item { Spacer(modifier = Modifier.height(48.dp)) }
+                    item { Spacer(modifier = Modifier.height(heightXXL)) }
                 }
             }
         }

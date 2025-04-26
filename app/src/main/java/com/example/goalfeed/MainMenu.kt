@@ -5,10 +5,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.goalfeed.home.NewsFeed
 import com.example.goalfeed.view.models.NewsViewModel
+import com.example.goalfeed.ui.theme.*
 
 @Composable
 fun MainMenu(onClick: (Int) -> Unit) {
@@ -20,7 +20,7 @@ fun MainMenu(onClick: (Int) -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(paddingLarge)
     ) {
         when {
             loading -> {
@@ -33,7 +33,7 @@ fun MainMenu(onClick: (Int) -> Unit) {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text("Error loading news", color = MaterialTheme.colorScheme.error)
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(spacingSmall))
                     Button(onClick = viewModel::retryApiCall) {
                         Text("Retry")
                     }
