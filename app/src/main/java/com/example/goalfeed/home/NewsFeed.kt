@@ -12,7 +12,7 @@ import com.example.goalfeed.ui.theme.*
 @Composable
 fun NewsFeed(newsList: List<NewsItem>, onClick: (NewsItem) -> Unit) {
     LazyColumn(
-        verticalArrangement = Arrangement.spacedBy(12.dp),
+        verticalArrangement = Arrangement.spacedBy(paddingMedium),
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()

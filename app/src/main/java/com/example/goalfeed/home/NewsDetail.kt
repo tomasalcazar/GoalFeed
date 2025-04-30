@@ -23,8 +23,10 @@ fun NewsDetail(newsItem: NewsItem, onBack: () -> Unit) {
                 .fillMaxSize()
                 .padding(innerPadding)
                 .padding(
-                    horizontal = paddingLarge,
-                    vertical = paddingMedium
+                    top = paddingExtraSmall,
+                    bottom = paddingSmall,
+                    start = paddingMedium,
+                    end = paddingMedium
                 )
         ) {
             Text(
