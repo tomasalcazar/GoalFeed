@@ -53,7 +53,7 @@ fun Matches(
                             MatchCard(matchItem)
                         }
                     }
-                    item { Spacer(modifier = Modifier.height(heightXXL)) }
+                    item { Spacer(modifier = Modifier.height(spacingXXL)) }
                 }
             }
         }

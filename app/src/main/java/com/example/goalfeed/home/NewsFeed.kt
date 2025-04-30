@@ -17,12 +17,12 @@ fun NewsFeed(newsList: List<NewsItem>, onClick: (NewsItem) -> Unit) {
             .fillMaxSize()
             .padding(vertical = paddingLarge)
     ) {
-        item { Spacer(Modifier.padding(paddingXXS)) }
+        item { Spacer(Modifier.padding(spacingXXS)) }
         items(newsList) { newsItem ->
             NewsCard(newsItem = newsItem) {
                 onClick(newsItem)
             }
         }
-        item { Spacer(Modifier.padding(paddingXXL)) }
+        item { Spacer(Modifier.padding(spacingXXL)) }
     }
 }

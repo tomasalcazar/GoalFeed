@@ -40,15 +40,8 @@ fun NavHostComposable(
             }
         }
         
-        composable(GoalFeedScreen.Favorite.name) {
-            Favorite()
-        }
-        
         composable(GoalFeedScreen.Matches.name) {
             val vm: MatchesViewModel = hiltViewModel()
-            val matches by vm.matches.collectAsState()
-            val loading by vm.loading.collectAsState()
-            val showRetry by vm.showRetry.collectAsState()
 
             Matches(
                 viewModel     = vm,
@@ -56,22 +49,6 @@ fun NavHostComposable(
                     navController.navigate("${GoalFeedScreen.MatchDetail.name}/$index")
                 }
             )
-        }
-        
-        composable(
-            route = "${GoalFeedScreen.MatchDetail.name}/{index}",
-            arguments = listOf(navArgument("index") { type = NavType.IntType })
-        ) { backStackEntry ->
-            val vm: MatchesViewModel = hiltViewModel()
-            val matches by vm.matches.collectAsState()
-            val idx = backStackEntry.arguments?.getInt("index") ?: 0
-            matches.getOrNull(idx)?.let { match ->
-                MatchDetail(match)
-            }
-        }
-        
-        composable(GoalFeedScreen.Profile.name) {
-            User()
         }
         
         composable(
@@ -87,6 +64,26 @@ fun NavHostComposable(
                     onBack = { navController.popBackStack() }
                 )
             }
+        }
+
+        composable(
+            route = "${GoalFeedScreen.MatchDetail.name}/{index}",
+            arguments = listOf(navArgument("index") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val vm: MatchesViewModel = hiltViewModel()
+            val matches by vm.matches.collectAsState()
+            val idx = backStackEntry.arguments?.getInt("index") ?: 0
+            matches.getOrNull(idx)?.let { match ->
+                MatchDetail(match)
+            }
+        }
+
+        composable(GoalFeedScreen.Favorite.name) {
+            Favorite()
+        }
+
+        composable(GoalFeedScreen.Profile.name) {
+            User()
         }
     }
 }
