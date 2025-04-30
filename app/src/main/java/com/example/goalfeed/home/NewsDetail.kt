@@ -34,7 +34,7 @@ fun NewsDetail(newsItem: NewsItem, onBack: () -> Unit) {
                 style = MaterialTheme.typography.headlineSmall
             )
 
-            Spacer(modifier = Modifier.height(heightMedium))
+            Spacer(modifier = Modifier.height(spacingMedium))
 
             newsItem.urlToImage?.let {
                 AsyncImage(
@@ -46,7 +46,7 @@ fun NewsDetail(newsItem: NewsItem, onBack: () -> Unit) {
                 )
             }
 
-            Spacer(modifier = Modifier.height(heightMedium))
+            Spacer(modifier = Modifier.height(spacingMedium))
 
             Text(
                 text = fullText.trim(),

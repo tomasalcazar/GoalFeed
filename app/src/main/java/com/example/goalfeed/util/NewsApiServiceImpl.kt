@@ -5,7 +5,11 @@ import android.widget.Toast
 import com.example.goalfeed.R
 import com.example.goalfeed.home.NewsApiResponse
 import com.example.goalfeed.home.NewsItem
-import retrofit.*
+import retrofit.Call
+import retrofit.Callback
+import retrofit.GsonConverterFactory
+import retrofit.Response
+import retrofit.Retrofit
 import javax.inject.Inject
 
 class NewsApiServiceImpl @Inject constructor() {
