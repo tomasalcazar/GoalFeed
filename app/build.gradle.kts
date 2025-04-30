@@ -63,6 +63,10 @@ dependencies {
     implementation(libs.converter.gson)
     implementation(libs.accompanist.navigation.material)
     implementation(libs.retrofit2.converter.gson)
+    implementation(libs.androidx.datastore.preferences)
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    kapt(libs.androidx.room.compiler)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
