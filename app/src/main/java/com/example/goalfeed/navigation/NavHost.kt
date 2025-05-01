@@ -1,6 +1,5 @@
 package com.example.goalfeed.navigation
 
-import NewsDetail
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -15,9 +14,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.goalfeed.MainMenu
-import com.example.goalfeed.favorite.Favorite
+import com.example.goalfeed.home.NewsDetail
 import com.example.goalfeed.matches.Matches
 import com.example.goalfeed.matches.MatchDetail
+import com.example.goalfeed.favorite.Favorite
 import com.example.goalfeed.profile.User
 import com.example.goalfeed.view.models.MatchesViewModel
 import com.example.goalfeed.view.models.NewsViewModel
@@ -39,18 +39,14 @@ fun NavHostComposable(
                 navController.navigate("${GoalFeedScreen.NewsDetail.name}/$index")
             }
         }
-        
-        composable(GoalFeedScreen.Matches.name) {
-            val vm: MatchesViewModel = hiltViewModel()
 
-            Matches(
-                viewModel     = vm,
-                onMatchClick  = { index ->
+        composable(GoalFeedScreen.Matches.name) {
+
+            Matches { index ->
                     navController.navigate("${GoalFeedScreen.MatchDetail.name}/$index")
                 }
-            )
         }
-        
+
         composable(
             route = "${GoalFeedScreen.NewsDetail.name}/{index}",
             arguments = listOf(navArgument("index") { type = NavType.IntType })
