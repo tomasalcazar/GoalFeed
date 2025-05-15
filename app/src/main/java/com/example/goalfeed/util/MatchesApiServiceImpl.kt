@@ -10,7 +10,6 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Inject
 
 class MatchesApiServiceImpl @Inject constructor() {
@@ -34,7 +33,7 @@ class MatchesApiServiceImpl @Inject constructor() {
         val retrofit = Retrofit.Builder()
             .baseUrl(baseUrl)
             .client(client)
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(retrofit2.converter.gson.GsonConverterFactory.create())
             .build()
 
         val service = retrofit.create(MatchesApiService::class.java)

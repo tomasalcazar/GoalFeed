@@ -4,7 +4,7 @@ enum class GoalFeedScreen {
     Home,
     Matches,
     Favorite,
-    Profile,
+    User,
     NewsDetail,
     MatchDetail,
 }

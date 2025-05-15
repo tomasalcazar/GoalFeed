@@ -18,10 +18,13 @@ import com.example.goalfeed.home.NewsDetail
 import com.example.goalfeed.matches.Matches
 import com.example.goalfeed.matches.MatchDetail
 import com.example.goalfeed.favorite.Favorite
-import com.example.goalfeed.profile.User
-import com.example.goalfeed.view.models.MatchesViewModel
-import com.example.goalfeed.view.models.NewsViewModel
+import com.example.goalfeed.user.User
+import com.example.goalfeed.matches.MatchesViewModel
+import com.example.goalfeed.home.NewsViewModel
+import android.os.Build
+import androidx.annotation.RequiresApi
 
+@RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
 @Composable
 fun NavHostComposable(
     innerPadding: PaddingValues,
@@ -55,10 +58,7 @@ fun NavHostComposable(
             val news by vm.news.collectAsState()
             val idx = backStackEntry.arguments?.getInt("index") ?: 0
             news.getOrNull(idx)?.let { item ->
-                NewsDetail(
-                    newsItem = item,
-                    onBack = { navController.popBackStack() }
-                )
+                NewsDetail(item)
             }
         }
 
@@ -78,7 +78,7 @@ fun NavHostComposable(
             Favorite()
         }
 
-        composable(GoalFeedScreen.Profile.name) {
+        composable(GoalFeedScreen.User.name) {
             User()
         }
     }

@@ -12,7 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.goalfeed.home.NewsFeed
-import com.example.goalfeed.view.models.NewsViewModel
+import com.example.goalfeed.home.NewsViewModel
 import com.example.goalfeed.ui.theme.*
 
 @Composable

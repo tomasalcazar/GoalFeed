@@ -4,8 +4,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SmallTopAppBar
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import coil3.compose.AsyncImage
@@ -13,16 +13,19 @@ import com.example.goalfeed.ui.theme.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NewsDetail(newsItem: NewsItem, onBack: () -> Unit) {
+fun NewsDetail(newsItem: NewsItem) {
     Scaffold(
         topBar = {
-            SmallTopAppBar(
-                title = { Text(text = newsItem.source.name, style = MaterialTheme.typography.bodyMedium) }
+            TopAppBar(
+                title = {
+                    Text(
+                        text = newsItem.source.name,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
             )
         }
     ) { innerPadding ->
-        val fullText = "${newsItem.description ?: ""}\n\n${newsItem.content?.substringBefore("[+") ?: ""}"
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -41,9 +44,9 @@ fun NewsDetail(newsItem: NewsItem, onBack: () -> Unit) {
 
             Spacer(modifier = Modifier.height(spacingMedium))
 
-            newsItem.urlToImage?.let {
+            newsItem.urlToImage?.let { url ->
                 AsyncImage(
-                    model = it,
+                    model = url,
                     contentDescription = null,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -52,6 +55,12 @@ fun NewsDetail(newsItem: NewsItem, onBack: () -> Unit) {
             }
 
             Spacer(modifier = Modifier.height(spacingMedium))
+
+            val fullText = buildString {
+                append(newsItem.description.orEmpty())
+                if (!newsItem.description.isNullOrBlank()) append("\n\n")
+                append(newsItem.content.orEmpty().substringBefore("[+"))
+            }
 
             Text(
                 text = fullText.trim(),

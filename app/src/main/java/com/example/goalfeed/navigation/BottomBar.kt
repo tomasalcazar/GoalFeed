@@ -29,7 +29,7 @@ fun BottomBar(
     val homeTab = TabBarItem(title = GoalFeedScreen.Home.name, selectedIcon = Icons.Filled.Home, unselectedIcon = Icons.Outlined.Home)
     val matchesTab = TabBarItem(title = GoalFeedScreen.Matches.name, selectedIcon = Icons.Filled.DateRange, unselectedIcon = Icons.Outlined.DateRange)
     val rankingTab = TabBarItem(title = GoalFeedScreen.Favorite.name, selectedIcon = Icons.Filled.Favorite, unselectedIcon = Icons.Outlined.FavoriteBorder)
-    val profileTab = TabBarItem(title = GoalFeedScreen.Profile.name, selectedIcon = Icons.Filled.Person, unselectedIcon = Icons.Outlined.Person)
+    val profileTab = TabBarItem(title = GoalFeedScreen.User.name, selectedIcon = Icons.Filled.Person, unselectedIcon = Icons.Outlined.Person)
 
     val tabBarItems = listOf(homeTab, matchesTab, rankingTab, profileTab)
 

@@ -14,7 +14,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.goalfeed.ui.theme.*
-import com.example.goalfeed.view.models.MatchesViewModel
 
 @Composable
 fun Matches(
