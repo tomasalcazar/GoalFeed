@@ -82,11 +82,11 @@ private fun GoogleButtonUI(
         border = BorderStroke(1.dp, Color.LightGray),
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 16.dp)
     ) {
-//        Image(
-//            modifier = Modifier.size(24.dp),
-//            painter = painterResource(R.drawable.dead),
-//            contentDescription = null
-//        )
+        Image(
+            modifier = Modifier.size(24.dp),
+            painter = painterResource(R.drawable.dead),
+            contentDescription = null
+        )
         Spacer(modifier = Modifier.width(8.dp))
         Text("Continue with Google")
     }

@@ -1,5 +1,7 @@
 package com.example.goalfeed.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -21,8 +23,6 @@ import com.example.goalfeed.favorite.Favorite
 import com.example.goalfeed.user.User
 import com.example.goalfeed.matches.MatchesViewModel
 import com.example.goalfeed.home.NewsViewModel
-import android.os.Build
-import androidx.annotation.RequiresApi
 
 @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
 @Composable
