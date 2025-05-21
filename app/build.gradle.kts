@@ -96,4 +96,7 @@ dependencies {
     implementation(libs.retrofit2.converter.gson)
     implementation(libs.material3)
 
+    implementation(platform("com.google.firebase:firebase-bom:33.13.0"))
+    implementation("com.google.firebase:firebase-analytics")
+
 }
