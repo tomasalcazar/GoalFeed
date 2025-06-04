@@ -1,5 +1,7 @@
 package com.example.goalfeed
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.compose.setContent
@@ -7,14 +9,13 @@ import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import com.example.goalfeed.navigation.BottomBar
 import com.example.goalfeed.navigation.NavHostComposable
 import com.example.goalfeed.ui.theme.GoalFeedTheme
 import androidx.fragment.app.FragmentActivity
+import com.example.goalfeed.notification.notificationChannelID
 import dagger.hilt.android.AndroidEntryPoint
 import com.google.firebase.FirebaseApp
 
@@ -24,6 +25,7 @@ class MainActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         FirebaseApp.initializeApp(this)
+        createNotificationChannel()
         enableEdgeToEdge()
         setContent {
             val navController = rememberNavController()
@@ -39,12 +41,15 @@ class MainActivity : FragmentActivity() {
             }
         }
     }
-}
 
-@Preview(showBackground = true)
-@Composable
-fun MainActivityPreview() {
-    GoalFeedTheme {
-        MainMenu {}
+    private fun createNotificationChannel() {
+        val notificationChannel = NotificationChannel(
+            notificationChannelID,
+            "Learning Android Notification",
+            NotificationManager.IMPORTANCE_HIGH
+        )
+        val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+
+        notificationManager.createNotificationChannel(notificationChannel)
     }
 }

@@ -10,6 +10,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -23,6 +24,7 @@ import com.example.goalfeed.favorite.Favorite
 import com.example.goalfeed.user.User
 import com.example.goalfeed.matches.MatchesViewModel
 import com.example.goalfeed.home.NewsViewModel
+import com.example.goalfeed.notification.Notification
 
 @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
 @Composable
@@ -74,12 +76,28 @@ fun NavHostComposable(
             }
         }
 
-        composable(GoalFeedScreen.Favorite.name) {
-            Favorite()
+        composable("favorite") {
+            val matchesVm: MatchesViewModel = hiltViewModel()
+            val allMatches by matchesVm.matches.collectAsStateWithLifecycle()
+
+            Favorite(onMatchClick = { matchItem ->
+                val idx = allMatches.indexOfFirst {
+                    it.homeTeam.name == matchItem.homeTeam.name &&
+                            it.awayTeam.name == matchItem.awayTeam.name &&
+                            it.utcDate == matchItem.utcDate
+                }
+                if (idx >= 0) {
+                    navController.navigate("${GoalFeedScreen.MatchDetail.name}/$idx")
+                }
+            })
         }
 
         composable(GoalFeedScreen.User.name) {
             User()
+        }
+
+        composable(GoalFeedScreen.Notifications.name) {
+            Notification()
         }
     }
 }

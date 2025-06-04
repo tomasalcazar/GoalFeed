@@ -26,98 +26,79 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-const val TAG = "UserViewModel"
+private const val TAG = "UserViewModel"
 
 @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
 @HiltViewModel
 class UserViewModel @Inject constructor(
-    @ApplicationContext val context: Context,
-): ViewModel() {
+    @ApplicationContext private val appContext: Context
+) : ViewModel() {
 
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
-    private val credentialManager = CredentialManager.create(context)
+    private val credentialManager: CredentialManager = CredentialManager.create(appContext)
 
     private val _userData = MutableStateFlow(auth.currentUser)
     val userData = _userData.asStateFlow()
 
-    fun launchCredentialManager() {
-        // Instantiate a Google sign-in request
+    /**
+     * Pass in an Activity context here so the One-Tap UI can attach to a window.
+     */
+    fun launchCredentialManager(windowContext: Context) {
         val googleIdOption = GetGoogleIdOption.Builder()
-            // Your server's client ID, not your Android client ID.
-            .setServerClientId(context.getString(R.string.google_server_id))
-            // Only show accounts previously used to sign in.
+            .setServerClientId(appContext.getString(R.string.google_server_id))
             .setFilterByAuthorizedAccounts(false)
             .build()
 
-        // Create the Credential Manager request
         val request = GetCredentialRequest.Builder()
             .addCredentialOption(googleIdOption)
             .build()
 
         viewModelScope.launch {
             try {
-                // Launch Credential Manager UI
                 val result = credentialManager.getCredential(
-                    context = context,
+                    context = windowContext,
                     request = request
                 )
-
-                // Extract credential from the result returned by Credential Manager
                 handleSignIn(result.credential)
             } catch (e: GetCredentialException) {
-                Log.e(TAG, "Couldn't retrieve user's credentials: ${e.localizedMessage}")
+                Log.e(TAG, "Couldn't retrieve credentials: ${e.localizedMessage}")
             }
         }
     }
 
     private fun handleSignIn(credential: Credential) {
-        // Check if credential is of type Google ID
         if (credential is CustomCredential && credential.type == TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
-            // Create Google ID Token
-            val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
-
-            // Sign in to Firebase with using the token
-            firebaseAuthWithGoogle(googleIdTokenCredential.idToken)
+            val idToken = GoogleIdTokenCredential.createFrom(credential.data).idToken
+            firebaseAuthWithGoogle(idToken)
         } else {
-            Log.w(TAG, "Credential is not of type Google ID!")
+            Log.w(TAG, "Credential is not a Google ID token!")
         }
     }
 
     private fun firebaseAuthWithGoogle(idToken: String) {
-        val credential = GoogleAuthProvider.getCredential(idToken, null)
-        auth.signInWithCredential(credential)
+        val firebaseCred = GoogleAuthProvider.getCredential(idToken, null)
+        auth.signInWithCredential(firebaseCred)
             .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
-                    Log.d(TAG, "signInWithCredential:success")
-                    val user = auth.currentUser
-                    viewModelScope.launch {
-                        _userData.emit(user)
-                    }
-                } else {
-                    // If sign in fails, display a message to the user
-                    viewModelScope.launch {
+                viewModelScope.launch {
+                    if (task.isSuccessful) {
+                        Log.d(TAG, "signInWithCredential:success")
+                        _userData.emit(auth.currentUser)
+                    } else {
+                        Log.w(TAG, "signInWithCredential:failure", task.exception)
                         _userData.emit(null)
                     }
-                    Log.w(TAG, "signInWithCredential:failure", task.exception)
                 }
             }
     }
 
     fun signOut() {
-        // Firebase sign out
         auth.signOut()
-
-        // When a user signs out, clear the current user credential state from all credential providers.
         viewModelScope.launch {
             try {
-                val clearRequest = ClearCredentialStateRequest()
-                credentialManager.clearCredentialState(clearRequest)
-                viewModelScope.launch {
-                    _userData.emit(null)
-                }
+                credentialManager.clearCredentialState(ClearCredentialStateRequest())
+                _userData.emit(null)
             } catch (e: ClearCredentialException) {
-                Log.e(TAG, "Couldn't clear user credentials: ${e.localizedMessage}")
+                Log.e(TAG, "Couldn't clear credentials: ${e.localizedMessage}")
             }
         }
     }
