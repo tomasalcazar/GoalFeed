@@ -1,4 +1,4 @@
 <resources>
     <string name="news_api_url">https://newsapi.org/v2/</string>
-    <string name="matches_api_url">https://v3.football.api-sports.io/</string>
+    <string name="matches_api_url">"https://v3.football.api-sports.io/"</string>
 </resources>

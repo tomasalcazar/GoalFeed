@@ -32,7 +32,7 @@ class MatchesApiServiceImpl @Inject constructor() {
             .build()
 
         val retrofit = Retrofit.Builder()
-            .baseUrl("https://v3.football.api-sports.io/")
+            .baseUrl(context.getString(R.string.matches_api_url))
             .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
