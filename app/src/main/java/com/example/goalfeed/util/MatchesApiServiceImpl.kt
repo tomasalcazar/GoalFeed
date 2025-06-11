@@ -1,61 +1,65 @@
 package com.example.goalfeed.util
 
+
 import android.content.Context
 import android.widget.Toast
-import com.example.goalfeed.matches.Match
-import com.example.goalfeed.matches.MatchesApiResponse
 import com.example.goalfeed.R
+import com.example.goalfeed.matches.ApiFootballMatch
+import com.example.goalfeed.matches.ApiFootballResponse
 import okhttp3.OkHttpClient
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
+import retrofit2.*
+import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Inject
 
 class MatchesApiServiceImpl @Inject constructor() {
+
     fun getMatches(
         context: Context,
-        onSuccess: (List<Match>) -> Unit,
-        onFail:    () -> Unit,
+        onSuccess: (List<ApiFootballMatch>) -> Unit,
+        onFail: () -> Unit,
         loadingFinished: () -> Unit
     ) {
-        val apiKey  = context.getString(R.string.matches_api_key)
-        val baseUrl = context.getString(R.string.matches_api_url)
+        val apiKey = context.getString(R.string.matches_api_key)
 
         val client = OkHttpClient.Builder()
             .addInterceptor { chain ->
-                val req = chain.request().newBuilder()
-                    .addHeader("X-Auth-Token", apiKey)
+                val request = chain.request().newBuilder()
+                    .addHeader("x-apisports-key", apiKey)
+                    .addHeader("Accept", "application/json")
                     .build()
-                chain.proceed(req)
-            }.build()
-
-        val retrofit = Retrofit.Builder()
-            .baseUrl(baseUrl)
-            .client(client)
-            .addConverterFactory(retrofit2.converter.gson.GsonConverterFactory.create())
+                chain.proceed(request)
+            }
             .build()
 
-        val service = retrofit.create(MatchesApiService::class.java)
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://v3.football.api-sports.io/")
+            .client(client)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
 
-        val call = service.getCompetitionMatches(competitionId = "PL")
+        val service = retrofit.create(ApiFootballService::class.java)
+        val call = service.getLiveFixtures("all")
 
-        call.enqueue(object : Callback<MatchesApiResponse> {
-            override fun onResponse(call: Call<MatchesApiResponse>,
-                                    response: Response<MatchesApiResponse>) {
-                loadingFinished()
+        call.enqueue(object : Callback<ApiFootballResponse> {
+            override fun onResponse(
+                call: Call<ApiFootballResponse>,
+                response: Response<ApiFootballResponse>
+            ) {
                 if (response.isSuccessful) {
-                    onSuccess(response.body()?.matches.orEmpty())
+                    val matches = response.body()?.response ?: emptyList()
+                    onSuccess(matches)
                 } else {
-                    onFailure(call, Exception("Bad request"))
+                    Toast.makeText(context, "Error loading live matches", Toast.LENGTH_SHORT).show()
+                    onFail()
                 }
+                loadingFinished()
             }
-            override fun onFailure(call: Call<MatchesApiResponse>, t: Throwable) {
-                Toast.makeText(context, "Can't load matches", Toast.LENGTH_SHORT).show()
+
+            override fun onFailure(call: Call<ApiFootballResponse>, t: Throwable) {
+                Toast.makeText(context, "API request failed", Toast.LENGTH_SHORT).show()
                 onFail()
                 loadingFinished()
             }
         })
     }
 }
-

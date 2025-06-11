@@ -1,6 +1,7 @@
 package com.example.goalfeed.matches
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.goalfeed.util.MatchesApiServiceImpl
@@ -36,12 +37,34 @@ class MatchesViewModel @Inject constructor(
         _loading.value = true
         apiServiceImpl.getMatches(
             context = context,
-            onSuccess = { list ->
-                viewModelScope.launch { _matches.emit(list) }
-                _showRetry.value = false
+            onSuccess = { apiList ->
+                viewModelScope.launch {
+                    // MAP ApiFootballMatch to your Match model
+                    val mapped = apiList.map {
+                        Match(
+                            utcDate = it.fixture.date,
+                            status = it.fixture.status.short,
+                            homeTeam = Team(it.teams.home.name),
+                            awayTeam = Team(it.teams.away.name),
+                            score = Score(
+                                FullTimeScore(
+                                    it.goals.home,
+                                    it.goals.away
+                                )
+                            )
+                        )
+                    }
+                    Log.d("MatchesVM", "Matches recibidos: ${mapped.size}")
+                    _matches.emit(mapped)
+                    _showRetry.value = false
+                }
             },
             onFail = {
-                _showRetry.value = true
+                Log.e("MatchesVM", "Fallo la llamada a la API")
+                viewModelScope.launch {
+                    _matches.emit(emptyList())
+                    _showRetry.value = true
+                }
             },
             loadingFinished = {
                 _loading.value = false

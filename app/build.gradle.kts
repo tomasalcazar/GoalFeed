@@ -47,7 +47,7 @@ android {
 }
 
 dependencies {
-
+    // AndroidX core & Compose
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -57,24 +57,47 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.navigation.compose)
+
+    // Coil (image loading)
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
+
+    // Hilt (dependency injection)
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.hilt.android)
-    implementation(libs.androidx.lifecycle.livedata.ktx)
     kapt(libs.hilt.android.compiler)
+
+    // Lifecycle
+    implementation(libs.androidx.lifecycle.livedata.ktx)
+
+    // Retrofit & Gson (network)
     implementation(libs.retrofit)
-    implementation(libs.converter.gson)
+    implementation(libs.retrofit2.converter.gson)
+
+    // DataStore
     implementation(libs.androidx.datastore.preferences)
+
+    // Room (local database)
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     kapt(libs.androidx.room.compiler)
+
+    // Biometric
     implementation(libs.androidx.biometric)
+
+    // Firebase Auth
     implementation(libs.firebase.auth.ktx)
     implementation(libs.google.firebase.auth.ktx)
+
+    // Credential Manager
     implementation(libs.androidx.credentials)
     implementation(libs.androidx.credentials.play.services.auth)
     implementation(libs.googleid)
+
+    // Accompanist Permissions
+    implementation(libs.accompanist.permissions)
+
+    // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -82,10 +105,4 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    implementation(libs.retrofit2.converter.gson)
-    implementation(libs.material3)
-    implementation(libs.accompanist.permissions)
-    implementation(platform("com.google.firebase:firebase-bom:33.13.0"))
-    implementation("com.google.firebase:firebase-analytics")
-    implementation ("androidx.compose.material:material-icons-extended:1.4.3")
 }
