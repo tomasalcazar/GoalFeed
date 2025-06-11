@@ -1,38 +1,35 @@
 package com.example.goalfeed.security
 
-import android.content.Context
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import javax.inject.Inject
 
-class BiometricAuthManager @Inject constructor() {
+import android.util.Log
 
-    fun authenticate(context: Context, onError: () -> Unit, onSuccess: () -> Unit, onFail: () -> Unit) {
-        val executor = ContextCompat.getMainExecutor(context)
+class BiometricAuthManager @Inject constructor() {
+    fun authenticate(
+        activity: FragmentActivity,
+        onError: () -> Unit,
+        onSuccess: () -> Unit,
+        onFail: () -> Unit
+    ) {
+        val executor = ContextCompat.getMainExecutor(activity)
         val biometricPrompt = BiometricPrompt(
-            context as FragmentActivity,
+            activity,
             executor,
             object : BiometricPrompt.AuthenticationCallback() {
                 override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
-                    super.onAuthenticationError(errorCode, errString)
-                    // handle authentication error here
+                    Log.e("BiometricPrompt", "onAuthenticationError: $errorCode $errString")
                     onError()
                 }
-
-                @RequiresApi(Build.VERSION_CODES.R)
                 override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
-                    super.onAuthenticationSucceeded(result)
-                    // handle authentication success here
+                    Log.i("BiometricPrompt", "onAuthenticationSucceeded")
                     onSuccess()
                 }
-
                 override fun onAuthenticationFailed() {
-                    super.onAuthenticationFailed()
-                    // handle authentication failure here
+                    Log.w("BiometricPrompt", "onAuthenticationFailed")
                     onFail()
                 }
             }
