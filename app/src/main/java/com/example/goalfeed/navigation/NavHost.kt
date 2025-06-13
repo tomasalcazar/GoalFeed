@@ -29,7 +29,9 @@ import com.example.goalfeed.home.NewsViewModel
 @Composable
 fun NavHostComposable(
     innerPadding: PaddingValues,
-    navController: NavHostController
+    navController: NavHostController,
+    isDarkMode: Boolean,
+    onToggleDarkMode: (Boolean) -> Unit
 ) {
     NavHost(
         navController = navController,
@@ -45,10 +47,9 @@ fun NavHostComposable(
         }
 
         composable(GoalFeedScreen.Matches.name) {
-
             Matches { index ->
-                    navController.navigate("${GoalFeedScreen.MatchDetail.name}/$index")
-                }
+                navController.navigate("${GoalFeedScreen.MatchDetail.name}/$index")
+            }
         }
 
         composable(
@@ -82,7 +83,11 @@ fun NavHostComposable(
 
         composable(GoalFeedScreen.User.name) {
             val vm: FavoriteTeamsViewModel = hiltViewModel()
-            User(favoriteTeamsViewModel = vm)
+            User(
+                favoriteTeamsViewModel = vm,
+                isDarkMode = isDarkMode,
+                onToggleDarkMode = onToggleDarkMode
+            )
         }
     }
 }

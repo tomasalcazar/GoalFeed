@@ -9,6 +9,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.example.goalfeed.navigation.BottomBar
@@ -29,14 +30,23 @@ class MainActivity : FragmentActivity() {
         enableEdgeToEdge()
         setContent {
             val navController = rememberNavController()
-            GoalFeedTheme {
+
+            // Estado global de dark mode
+            var isDarkMode by remember { mutableStateOf(false) }
+
+            GoalFeedTheme(darkTheme = isDarkMode) {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
                     bottomBar = {
                         BottomBar(navController::navigate)
                     }
                 ) { innerPadding ->
-                    NavHostComposable(innerPadding, navController)
+                    NavHostComposable(
+                        innerPadding = innerPadding,
+                        navController = navController,
+                        isDarkMode = isDarkMode,
+                        onToggleDarkMode = { isDarkMode = it }
+                    )
                 }
             }
         }
@@ -49,7 +59,6 @@ class MainActivity : FragmentActivity() {
             NotificationManager.IMPORTANCE_HIGH
         )
         val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-
         notificationManager.createNotificationChannel(notificationChannel)
     }
 }

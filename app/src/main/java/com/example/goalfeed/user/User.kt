@@ -19,7 +19,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil3.compose.AsyncImage
 import com.example.goalfeed.favorite.FavoriteTeamsViewModel
-import com.example.goalfeed.notification.ScheduleNotificationViewModel
 import com.example.goalfeed.R
 
 @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
@@ -27,7 +26,8 @@ import com.example.goalfeed.R
 fun User(
     userViewModel: UserViewModel = hiltViewModel(),
     favoriteTeamsViewModel: FavoriteTeamsViewModel = hiltViewModel(),
-    notificationVM: ScheduleNotificationViewModel = hiltViewModel()
+    isDarkMode: Boolean,
+    onToggleDarkMode: (Boolean) -> Unit,
 ) {
     val allTeams by userViewModel.allTeams.collectAsState()
     val favoriteTeams by favoriteTeamsViewModel.favoriteTeams.collectAsState()
@@ -39,7 +39,17 @@ fun User(
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        // --- SOCIAL LOGIN ---
+        // --- Switch para Dark Mode ---
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text("Modo oscuro", Modifier.weight(1f))
+            Switch(
+                checked = isDarkMode,
+                onCheckedChange = { onToggleDarkMode(it) }
+            )
+        }
+        Spacer(Modifier.height(12.dp))
+
+        // --- SOCIAL LOGIN BLOQUE ---
         if (userData == null) {
             GoogleLoginButton(
                 onClick = userViewModel::launchCredentialManager,
@@ -68,7 +78,7 @@ fun User(
             Spacer(Modifier.height(16.dp))
         }
 
-        // --- FAVORITOS UI ---
+        // --- FAVORITOS UI COMO SIEMPRE ---
         Text(
             "Selecciona tus equipos NBA favoritos",
             style = MaterialTheme.typography.titleLarge
@@ -86,10 +96,8 @@ fun User(
                         .clickable {
                             if (isFavorite) {
                                 favoriteTeamsViewModel.removeFavorite(team)
-                                notificationVM.notifyNow("Eliminaste a ${team.name} de favoritos")
                             } else {
                                 favoriteTeamsViewModel.addFavorite(team)
-                                notificationVM.notifyNow("Agregaste a ${team.name} a favoritos")
                             }
                         }
                         .padding(vertical = 8.dp, horizontal = 12.dp),
