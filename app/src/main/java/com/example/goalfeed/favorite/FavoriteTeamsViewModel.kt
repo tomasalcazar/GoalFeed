@@ -17,14 +17,6 @@ class FavoriteTeamsViewModel @Inject constructor(
     val favoriteTeams: StateFlow<List<FavoriteTeam>> =
         dao.getAll().stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    init {
-        viewModelScope.launch {
-            favoriteTeams.collect {
-                println("DEBUG FavoriteVM: Lista de favoritos: ${it.map { f -> f.name }}")
-            }
-        }
-    }
-
     fun addFavorite(team: FavoriteTeam) {
         viewModelScope.launch { dao.insert(team) }
     }

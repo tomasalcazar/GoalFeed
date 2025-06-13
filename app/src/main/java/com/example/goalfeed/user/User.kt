@@ -19,25 +19,27 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil3.compose.AsyncImage
 import com.example.goalfeed.favorite.FavoriteTeamsViewModel
+import com.example.goalfeed.notification.ScheduleNotificationViewModel
 import com.example.goalfeed.R
 
 @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
 @Composable
 fun User(
     userViewModel: UserViewModel = hiltViewModel(),
-    favoriteTeamsViewModel: FavoriteTeamsViewModel = hiltViewModel()
+    favoriteTeamsViewModel: FavoriteTeamsViewModel = hiltViewModel(),
+    notificationVM: ScheduleNotificationViewModel = hiltViewModel()
 ) {
     val allTeams by userViewModel.allTeams.collectAsState()
     val favoriteTeams by favoriteTeamsViewModel.favoriteTeams.collectAsState()
     val favoriteTeamIds = remember(favoriteTeams) { favoriteTeams.map { it.id } }
-    val userData by userViewModel.userData.collectAsState() // Nuevo, user logueado (puede ser null)
+    val userData by userViewModel.userData.collectAsState()
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        // --- SOCIAL LOGIN BLOQUE ---
+        // --- SOCIAL LOGIN ---
         if (userData == null) {
             GoogleLoginButton(
                 onClick = userViewModel::launchCredentialManager,
@@ -66,7 +68,7 @@ fun User(
             Spacer(Modifier.height(16.dp))
         }
 
-        // --- FAVORITOS UI COMO SIEMPRE ---
+        // --- FAVORITOS UI ---
         Text(
             "Selecciona tus equipos NBA favoritos",
             style = MaterialTheme.typography.titleLarge
@@ -84,8 +86,10 @@ fun User(
                         .clickable {
                             if (isFavorite) {
                                 favoriteTeamsViewModel.removeFavorite(team)
+                                notificationVM.notifyNow("Eliminaste a ${team.name} de favoritos")
                             } else {
                                 favoriteTeamsViewModel.addFavorite(team)
+                                notificationVM.notifyNow("Agregaste a ${team.name} a favoritos")
                             }
                         }
                         .padding(vertical = 8.dp, horizontal = 12.dp),
@@ -124,10 +128,9 @@ fun GoogleLoginButton(
         border = ButtonDefaults.outlinedButtonBorder,
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 16.dp)
     ) {
-        // Cambiá por el logo de Google de tu proyecto (usa R.drawable.google_logo o el que tengas)
         Image(
             modifier = Modifier.size(24.dp),
-            painter = painterResource(R.drawable.ic_google_logo), // Cambiá el resource
+            painter = painterResource(R.drawable.ic_google_logo),
             contentDescription = null
         )
         Spacer(modifier = Modifier.width(8.dp))
