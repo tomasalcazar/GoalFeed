@@ -28,7 +28,7 @@ class NotificationReceiver : BroadcastReceiver() {
         val notification = NotificationCompat.Builder(context, notificationChannelID)
             .setContentTitle("Don't slack off now")
             .setContentText("Remember to learn a little Android development today")
-            .setSmallIcon(R.drawable.dead)
+            .setSmallIcon(R.drawable.ic_google_logo)
             .setPriority(NotificationManager.IMPORTANCE_HIGH)
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
