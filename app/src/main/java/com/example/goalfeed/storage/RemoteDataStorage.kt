@@ -7,19 +7,13 @@ import androidx.room.RoomDatabase
 import com.example.goalfeed.data.FavoriteTeam
 import com.example.goalfeed.data.FavoriteTeamDao
 
-@Database(
-    entities = [
-        FavoriteTeam::class
-    ],
-    version = 1,
-    exportSchema = false
-)
+@Database(entities = [FavoriteTeam::class], version = 3)
 abstract class GoalFeedDatabase : RoomDatabase() {
-
     abstract fun favoriteTeamDao(): FavoriteTeamDao
 
     companion object {
-        @Volatile private var INSTANCE: GoalFeedDatabase? = null
+        @Volatile
+        private var INSTANCE: GoalFeedDatabase? = null
 
         fun getDatabase(context: Context): GoalFeedDatabase {
             return INSTANCE ?: synchronized(this) {
@@ -27,10 +21,7 @@ abstract class GoalFeedDatabase : RoomDatabase() {
                     context.applicationContext,
                     GoalFeedDatabase::class.java,
                     "goalfeed_database"
-                )
-                    .fallbackToDestructiveMigration()
-                    .build()
-
+                ).fallbackToDestructiveMigration().build()
                 INSTANCE = instance
                 instance
             }

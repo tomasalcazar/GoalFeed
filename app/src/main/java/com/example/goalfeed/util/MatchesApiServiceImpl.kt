@@ -37,7 +37,7 @@ class MatchesApiServiceImpl @Inject constructor() {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-        val service = retrofit.create(ApiFootballService::class.java)
+        val service = retrofit.create(MatchesApiService::class.java)
         val call = service.getLiveFixtures("all")
 
         call.enqueue(object : Callback<ApiFootballResponse> {

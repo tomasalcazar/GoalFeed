@@ -15,8 +15,7 @@ data class ApiFootballMatch(
 data class FixtureInfo(
     val id: Int,
     val date: String,
-    val status: StatusInfo,
-    // otros campos si quieres
+    val status: StatusInfo
 )
 
 data class StatusInfo(
@@ -32,7 +31,7 @@ data class LeagueInfo(
     val logo: String,
     val flag: String?,
     val season: Int,
-    val round: String,
+    val round: String
 )
 
 data class TeamsInfo(

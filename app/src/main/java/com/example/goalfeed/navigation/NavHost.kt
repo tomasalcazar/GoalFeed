@@ -16,10 +16,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.goalfeed.MainMenu
+import com.example.goalfeed.favorite.Favorite
 import com.example.goalfeed.home.NewsDetail
 import com.example.goalfeed.matches.Matches
 import com.example.goalfeed.matches.MatchDetail
-//import com.example.goalfeed.favorite.Favorite
 import com.example.goalfeed.user.User
 import com.example.goalfeed.matches.MatchesViewModel
 import com.example.goalfeed.home.NewsViewModel
@@ -74,12 +74,15 @@ fun NavHostComposable(
             }
         }
 
-//        composable(GoalFeedScreen.Favorite.name) {
-//            Favorite()
-//        }
+        composable(GoalFeedScreen.Favorite.name) {
+            val vm: MatchesViewModel = hiltViewModel()
+            val matches by vm.matches.collectAsState()
+            Favorite(matches = matches)
+        }
 
         composable(GoalFeedScreen.User.name) {
             User()
+
         }
     }
 }

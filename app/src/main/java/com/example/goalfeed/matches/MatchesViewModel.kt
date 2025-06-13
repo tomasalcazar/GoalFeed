@@ -39,17 +39,25 @@ class MatchesViewModel @Inject constructor(
             context = context,
             onSuccess = { apiList ->
                 viewModelScope.launch {
-                    // MAP ApiFootballMatch to your Match model
+                    // Map ApiFootballMatch to your Match model
                     val mapped = apiList.map {
                         Match(
                             utcDate = it.fixture.date,
                             status = it.fixture.status.short,
-                            homeTeam = Team(it.teams.home.name),
-                            awayTeam = Team(it.teams.away.name),
+                            homeTeam = Team(
+                                id = it.teams.home.id,
+                                name = it.teams.home.name,
+                                logo = it.teams.home.logo
+                            ),
+                            awayTeam = Team(
+                                id = it.teams.away.id,
+                                name = it.teams.away.name,
+                                logo = it.teams.away.logo
+                            ),
                             score = Score(
                                 FullTimeScore(
-                                    it.goals.home,
-                                    it.goals.away
+                                    home = it.goals.home,
+                                    away = it.goals.away
                                 )
                             )
                         )

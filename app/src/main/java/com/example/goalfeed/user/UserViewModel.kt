@@ -1,124 +1,70 @@
 package com.example.goalfeed.user
 
-import android.content.Context
-import android.os.Build
+import android.app.Application
 import android.util.Log
-import androidx.annotation.RequiresApi
-import androidx.credentials.ClearCredentialStateRequest
-import androidx.credentials.Credential
-import androidx.credentials.CredentialManager
-import androidx.credentials.CustomCredential
-import androidx.credentials.GetCredentialRequest
-import androidx.credentials.exceptions.ClearCredentialException
-import androidx.credentials.exceptions.GetCredentialException
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.example.goalfeed.R
-import com.google.android.libraries.identity.googleid.GetGoogleIdOption
-import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
-import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential.Companion.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.GoogleAuthProvider
-import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
+import androidx.lifecycle.AndroidViewModel
+import com.example.goalfeed.data.FavoriteTeam
+import com.example.goalfeed.util.TeamsApiServiceImpl
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
-import javax.inject.Inject
+import kotlinx.coroutines.flow.StateFlow
 
-const val TAG = "UserViewModel"
+class UserViewModel(
+    application: Application
+) : AndroidViewModel(application) {
 
-@RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
-@HiltViewModel
-class UserViewModel @Inject constructor(
-    @ApplicationContext val context: Context,
-): ViewModel() {
+    private val apiService = TeamsApiServiceImpl()
 
-    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
-    private val credentialManager = CredentialManager.create(context)
+    private val _allTeams = MutableStateFlow<List<FavoriteTeam>>(emptyList())
+    val allTeams: StateFlow<List<FavoriteTeam>> = _allTeams
 
-    private val _userData = MutableStateFlow(auth.currentUser)
-    val userData = _userData.asStateFlow()
+    private val _loading = MutableStateFlow(true)
+    val loading: StateFlow<Boolean> = _loading
 
-    fun launchCredentialManager() {
-        // Instantiate a Google sign-in request
-        val googleIdOption = GetGoogleIdOption.Builder()
-            // Your server's client ID, not your Android client ID.
-            .setServerClientId(context.getString(R.string.google_server_id))
-            // Only show accounts previously used to sign in.
-            .setFilterByAuthorizedAccounts(false)
-            .build()
+    // Ligas principales de Europa
+    private val leagueIds = listOf(
+        39,   // Premier League
+        140,  // La Liga
+        78,   // Bundesliga
+        135,  // Serie A
+        61    // Ligue 1
+    )
+    private val season = 2023
 
-        // Create the Credential Manager request
-        val request = GetCredentialRequest.Builder()
-            .addCredentialOption(googleIdOption)
-            .build()
-
-        viewModelScope.launch {
-            try {
-                // Launch Credential Manager UI
-                val result = credentialManager.getCredential(
-                    context = context,
-                    request = request
-                )
-
-                // Extract credential from the result returned by Credential Manager
-                handleSignIn(result.credential)
-            } catch (e: GetCredentialException) {
-                Log.e(TAG, "Couldn't retrieve user's credentials: ${e.localizedMessage}")
-            }
-        }
+    init {
+        fetchAllTeams(application)
     }
 
-    private fun handleSignIn(credential: Credential) {
-        // Check if credential is of type Google ID
-        if (credential is CustomCredential && credential.type == TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
-            // Create Google ID Token
-            val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
-
-            // Sign in to Firebase with using the token
-            firebaseAuthWithGoogle(googleIdTokenCredential.idToken)
-        } else {
-            Log.w(TAG, "Credential is not of type Google ID!")
-        }
-    }
-
-    private fun firebaseAuthWithGoogle(idToken: String) {
-        val credential = GoogleAuthProvider.getCredential(idToken, null)
-        auth.signInWithCredential(credential)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
-                    Log.d(TAG, "signInWithCredential:success")
-                    val user = auth.currentUser
-                    viewModelScope.launch {
-                        _userData.emit(user)
+    private fun fetchAllTeams(application: Application) {
+        val teamsAccumulator = mutableListOf<FavoriteTeam>()
+        var processed = 0
+        _loading.value = true
+        leagueIds.forEach { leagueId ->
+            apiService.getTeams(
+                context = application,
+                leagueId = leagueId,
+                season = season,
+                onSuccess = { teams ->
+                    Log.d("UserVM", "Equipos recibidos para liga $leagueId: ${teams.size}")
+                    teams.take(3).forEach { Log.d("UserVM", "Equipo: ${it.name} (${it.id})") }
+                    teamsAccumulator.addAll(teams)
+                    processed++
+                    if (processed == leagueIds.size) {
+                        _allTeams.value = teamsAccumulator.distinctBy { it.id }
+                        Log.d("UserVM", "Equipos totales emitidos: ${_allTeams.value.size}")
+                        _loading.value = false
                     }
-                } else {
-                    // If sign in fails, display a message to the user
-                    viewModelScope.launch {
-                        _userData.emit(null)
+                },
+                onFail = {
+                    Log.e("UserVM", "ERROR: Falló la API para liga $leagueId")
+                    processed++
+                    if (processed == leagueIds.size) {
+                        _allTeams.value = teamsAccumulator.distinctBy { it.id }
+                        Log.d("UserVM", "Equipos totales emitidos (fallo): ${_allTeams.value.size}")
+                        _loading.value = false
                     }
-                    Log.w(TAG, "signInWithCredential:failure", task.exception)
-                }
-            }
-    }
-
-    fun signOut() {
-        // Firebase sign out
-        auth.signOut()
-
-        // When a user signs out, clear the current user credential state from all credential providers.
-        viewModelScope.launch {
-            try {
-                val clearRequest = ClearCredentialStateRequest()
-                credentialManager.clearCredentialState(clearRequest)
-                viewModelScope.launch {
-                    _userData.emit(null)
-                }
-            } catch (e: ClearCredentialException) {
-                Log.e(TAG, "Couldn't clear user credentials: ${e.localizedMessage}")
-            }
+                },
+                loadingFinished = {}
+            )
         }
     }
 }
