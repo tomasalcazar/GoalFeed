@@ -3,6 +3,7 @@ package com.example.goalfeed.ui.theme
 import androidx.compose.ui.unit.dp
 
 // Padding values
+val noPadding = 0.dp
 val paddingXXS = 0.2.dp
 val paddingExtraSmall = 4.dp
 val paddingSmall = 8.dp

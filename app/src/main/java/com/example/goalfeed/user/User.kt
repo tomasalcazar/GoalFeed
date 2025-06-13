@@ -3,6 +3,7 @@ package com.example.goalfeed.user
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -13,106 +14,146 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil3.compose.AsyncImage
-import com.example.goalfeed.favorite.FavoriteTeamsViewModel
 import com.example.goalfeed.R
+import com.example.goalfeed.favorite.FavoriteTeamsViewModel
+import com.example.goalfeed.notification.ScheduleNotificationViewModel
+import com.example.goalfeed.ui.theme.*
 
 @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
 @Composable
 fun User(
     userViewModel: UserViewModel = hiltViewModel(),
     favoriteTeamsViewModel: FavoriteTeamsViewModel = hiltViewModel(),
+    notificationVM: ScheduleNotificationViewModel = hiltViewModel(),
     isDarkMode: Boolean,
-    onToggleDarkMode: (Boolean) -> Unit,
+    onToggleDarkMode: (Boolean) -> Unit
 ) {
     val allTeams by userViewModel.allTeams.collectAsState()
     val favoriteTeams by favoriteTeamsViewModel.favoriteTeams.collectAsState()
-    val favoriteTeamIds = remember(favoriteTeams) { favoriteTeams.map { it.id } }
+    val favoriteIds = remember(favoriteTeams) { favoriteTeams.map { it.id } }
     val userData by userViewModel.userData.collectAsState()
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .background(MaterialTheme.colorScheme.background)
+            .padding(paddingLarge)
     ) {
-        // --- Switch para Dark Mode ---
+        // Dark mode toggle
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text("Modo oscuro", Modifier.weight(1f))
+            Text(
+                "Modo oscuro",
+                Modifier.weight(1f),
+                color = MaterialTheme.colorScheme.onBackground,
+                style = MaterialTheme.typography.bodyLarge
+            )
             Switch(
                 checked = isDarkMode,
-                onCheckedChange = { onToggleDarkMode(it) }
+                onCheckedChange = onToggleDarkMode,
+                colors = SwitchDefaults.colors(
+                    uncheckedThumbColor = MaterialTheme.colorScheme.onSurface,
+                    checkedThumbColor   = MaterialTheme.colorScheme.primary
+                )
             )
         }
-        Spacer(Modifier.height(12.dp))
+        Spacer(Modifier.height(heightMedium))
 
-        // --- SOCIAL LOGIN BLOQUE ---
+        // Social login
         if (userData == null) {
             GoogleLoginButton(
                 onClick = userViewModel::launchCredentialManager,
                 modifier = Modifier.fillMaxWidth()
             )
-            Spacer(Modifier.height(16.dp))
+            Spacer(Modifier.height(spacingLarge))
         } else {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                if (!userData!!.photoUrl.isNullOrBlank()) {
+                userData!!.photoUrl.takeIf { !it.isNullOrBlank() }?.let { url ->
                     AsyncImage(
-                        model = userData!!.photoUrl,
-                        contentDescription = "",
-                        modifier = Modifier.size(40.dp)
+                        model = url,
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .size(heightExtraLarge)
+                            .clip(MaterialTheme.shapes.small)
                     )
-                    Spacer(Modifier.width(10.dp))
+                    Spacer(Modifier.width(spacingMedium))
                 }
                 Column {
-                    Text(userData!!.displayName ?: "", style = MaterialTheme.typography.titleMedium)
-                    Text(userData!!.email ?: "", style = MaterialTheme.typography.bodySmall)
+                    Text(
+                        text = userData!!.displayName.orEmpty(),
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
+                    Text(
+                        text = userData!!.email.orEmpty(),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
                 }
                 Spacer(Modifier.weight(1f))
-                Button(onClick = { userViewModel.signOut() }) {
+                Button(
+                    onClick = { userViewModel.signOut() },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor   = MaterialTheme.colorScheme.onPrimary
+                    )
+                ) {
                     Text("Sign out")
                 }
             }
-            Spacer(Modifier.height(16.dp))
+            Spacer(Modifier.height(spacingLarge))
         }
 
-        // --- FAVORITOS UI COMO SIEMPRE ---
+        // Favorites header
         Text(
             "Selecciona tus equipos NBA favoritos",
-            style = MaterialTheme.typography.titleLarge
+            style = MaterialTheme.typography.titleLarge,
+            color = MaterialTheme.colorScheme.onBackground
         )
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(Modifier.height(spacingLarge))
+
+        // Favorites list
         LazyColumn(
-            contentPadding = PaddingValues(0.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            contentPadding      = PaddingValues(0.dp),
+            verticalArrangement = Arrangement.spacedBy(spacingSmall)
         ) {
             items(allTeams) { team ->
-                val isFavorite = team.id in favoriteTeamIds
+                val isFav = team.id in favoriteIds
                 Row(
-                    Modifier
+                    modifier = Modifier
                         .fillMaxWidth()
+                        .background(MaterialTheme.colorScheme.surface, shape = MaterialTheme.shapes.medium)
                         .clickable {
-                            if (isFavorite) {
+                            if (isFav) {
                                 favoriteTeamsViewModel.removeFavorite(team)
+                                notificationVM.notifyNow("Eliminaste a ${team.name} de favoritos")
                             } else {
                                 favoriteTeamsViewModel.addFavorite(team)
+                                notificationVM.notifyNow("Agregaste a ${team.name} a favoritos")
                             }
                         }
-                        .padding(vertical = 8.dp, horizontal = 12.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                        .padding(vertical = paddingSmall, horizontal = paddingMedium),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment     = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = team.name,
-                        modifier = Modifier.weight(1f),
-                        color = MaterialTheme.colorScheme.onBackground,
-                        style = MaterialTheme.typography.bodyLarge
+                        text  = team.name,
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                     Icon(
-                        imageVector = Icons.Filled.Star,
-                        contentDescription = if (isFavorite) "Favorito" else "No favorito",
-                        tint = if (isFavorite) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
+                        imageVector        = Icons.Filled.Star,
+                        contentDescription = if (isFav) "Favorito" else "No favorito",
+                        tint               = if (isFav)
+                            MaterialTheme.colorScheme.primary
+                        else
+                            MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
                     )
                 }
             }
@@ -126,22 +167,22 @@ fun GoogleLoginButton(
     modifier: Modifier = Modifier
 ) {
     Button(
-        modifier = modifier,
         onClick = onClick,
+        modifier = modifier,
         colors = ButtonDefaults.buttonColors(
-            containerColor = Color.White,
-            contentColor = Color.Black
+            containerColor = MaterialTheme.colorScheme.surface,
+            contentColor   = MaterialTheme.colorScheme.onSurface
         ),
-        shape = MaterialTheme.shapes.medium,
-        border = ButtonDefaults.outlinedButtonBorder,
-        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 16.dp)
+        shape          = MaterialTheme.shapes.medium,
+        border         = ButtonDefaults.outlinedButtonBorder,
+        contentPadding = PaddingValues(horizontal = paddingLarge, vertical = paddingLarge)
     ) {
         Image(
-            modifier = Modifier.size(24.dp),
-            painter = painterResource(R.drawable.ic_google_logo),
-            contentDescription = null
+            painter           = painterResource(R.drawable.ic_google_logo),
+            contentDescription = "Logo de Google",
+            modifier          = Modifier.size(heightLarge)
         )
-        Spacer(modifier = Modifier.width(8.dp))
+        Spacer(Modifier.width(spacingSmall))
         Text("Continuar con Google")
     }
 }

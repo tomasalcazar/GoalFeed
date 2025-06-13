@@ -6,14 +6,15 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil3.compose.AsyncImage
+import com.example.goalfeed.ui.theme.*
 
 @Composable
 fun Favorite(
@@ -22,41 +23,40 @@ fun Favorite(
     val favoriteTeams by favoriteTeamsViewModel.favoriteTeams.collectAsState()
 
     Column(
-        Modifier
+        modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFFAF2BB)) // Fondo bien visible pastel
-            .padding(16.dp)
+            .background(MaterialTheme.colorScheme.background)
+            .padding(paddingMedium)
     ) {
         Text(
-            "Tus equipos NBA favoritos",
+            text  = "Tus equipos NBA favoritos",
             style = MaterialTheme.typography.titleLarge,
-            color = Color.Black
+            color = MaterialTheme.colorScheme.onBackground
         )
-        Spacer(Modifier.height(16.dp))
-        LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        Spacer(Modifier.height(heightLarge))
+        LazyColumn(verticalArrangement = Arrangement.spacedBy(spacingMedium)) {
             items(favoriteTeams) { team ->
-                println("DIBUJANDO FAVORITO: ${team.name}") // DEBUG
                 Row(
-                    Modifier
+                    modifier = Modifier
                         .fillMaxWidth()
-                        .background(Color.White, shape = MaterialTheme.shapes.medium)
-                        .padding(12.dp),
+                        .background(MaterialTheme.colorScheme.surface, shape = MaterialTheme.shapes.medium)
+                        .padding(paddingMedium),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    if (!team.logo.isNullOrBlank()) {
+                    team.logo?.takeIf { it.isNotBlank() }?.let { url ->
                         AsyncImage(
-                            model = team.logo,
+                            model              = url,
                             contentDescription = "Logo ${team.name}",
-                            modifier = Modifier
-                                .size(40.dp)
+                            modifier           = Modifier
+                                .size(heightExtraLarge)
                                 .clip(CircleShape)
                         )
-                        Spacer(Modifier.width(12.dp))
+                        Spacer(Modifier.width(spacingMedium))
                     }
                     Text(
-                        text = team.name,
-                        color = Color.Black,
-                        style = MaterialTheme.typography.titleMedium
+                        text  = team.name,
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                 }
             }
