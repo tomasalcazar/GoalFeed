@@ -19,6 +19,7 @@ object DatabaseModule {
         GoalFeedDatabase.getDatabase(context)
 
     @Provides
+    @Singleton  // <- AGREGA ESTO
     fun provideFavoriteTeamDao(db: GoalFeedDatabase): FavoriteTeamDao =
         db.favoriteTeamDao()
 }

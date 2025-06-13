@@ -14,12 +14,16 @@ class FavoriteTeamsViewModel @Inject constructor(
     private val dao: FavoriteTeamDao
 ) : ViewModel() {
 
-    val favoriteTeams: StateFlow<List<FavoriteTeam>> = dao.getAll()
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+    val favoriteTeams: StateFlow<List<FavoriteTeam>> =
+        dao.getAll().stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    val favoriteTeamIds: StateFlow<List<Int>> = dao.getAll()
-        .map { teams -> teams.map { it.id } }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+    init {
+        viewModelScope.launch {
+            favoriteTeams.collect {
+                println("DEBUG FavoriteVM: Lista de favoritos: ${it.map { f -> f.name }}")
+            }
+        }
+    }
 
     fun addFavorite(team: FavoriteTeam) {
         viewModelScope.launch { dao.insert(team) }

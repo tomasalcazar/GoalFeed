@@ -1,14 +1,10 @@
 package com.example.goalfeed.user
 
 data class TeamsApiResponse(
-    val response: List<TeamEntry>
+    val response: List<NbaTeamEntry>
 )
 
-data class TeamEntry(
-    val team: TeamDetail
-)
-
-data class TeamDetail(
+data class NbaTeamEntry(
     val id: Int,
     val name: String,
     val logo: String

@@ -1,6 +1,5 @@
 package com.example.goalfeed.user
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -13,12 +12,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.goalfeed.favorite.FavoriteTeamsViewModel
-import com.example.goalfeed.data.FavoriteTeam
 
 @Composable
 fun User(
     userViewModel: UserViewModel = hiltViewModel(),
-    favoriteTeamsViewModel: FavoriteTeamsViewModel = hiltViewModel()
+    favoriteTeamsViewModel: FavoriteTeamsViewModel
 ) {
     val allTeams by userViewModel.allTeams.collectAsState()
     val favoriteTeams by favoriteTeamsViewModel.favoriteTeams.collectAsState()
@@ -28,17 +26,14 @@ fun User(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
-            .background(MaterialTheme.colorScheme.background) // O cualquier color que quieras
     ) {
         Text(
-            "Selecciona tus equipos favoritos",
-            style = MaterialTheme.typography.titleLarge,
-            color = MaterialTheme.colorScheme.onBackground // Así usa el color de texto correcto según el theme
+            "Selecciona tus equipos NBA favoritos",
+            style = MaterialTheme.typography.titleLarge
         )
         Spacer(modifier = Modifier.height(16.dp))
 
         LazyColumn(
-            modifier = Modifier.weight(1f), // Así ocupa todo el espacio disponible
             contentPadding = PaddingValues(0.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
@@ -49,26 +44,28 @@ fun User(
                         .fillMaxWidth()
                         .clickable {
                             if (isFavorite) {
-                                favoriteTeamsViewModel.removeFavorite(FavoriteTeam(team.id, team.name, team.logo))
+                                favoriteTeamsViewModel.removeFavorite(team)
                             } else {
-                                favoriteTeamsViewModel.addFavorite(FavoriteTeam(team.id, team.name, team.logo))
+                                favoriteTeamsViewModel.addFavorite(team)
                             }
                         }
                         .padding(vertical = 8.dp, horizontal = 12.dp),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
+                    // Nombre del equipo con peso (¡ahora sí se ve!)
                     Text(
-                        team.name,
-                        color = MaterialTheme.colorScheme.onBackground // Para evitar texto blanco sobre fondo blanco
+                        text = team.name,
+                        modifier = Modifier.weight(1f),
+                        color = MaterialTheme.colorScheme.onBackground,
+                        style = MaterialTheme.typography.bodyLarge
                     )
                     Icon(
-                        imageVector = if (isFavorite) Icons.Filled.Star else Icons.Filled.Star,
+                        imageVector = Icons.Filled.Star,
                         contentDescription = if (isFavorite) "Favorito" else "No favorito",
-                        tint = if (isFavorite) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground
+                        tint = if (isFavorite) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
                     )
                 }
             }
         }
     }
 }
-

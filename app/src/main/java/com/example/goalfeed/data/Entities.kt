@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "favorite_teams")
 data class FavoriteTeam(
-    @PrimaryKey val id: Int, // El id de equipo (API-Football)
+    @PrimaryKey val id: Int,
     val name: String,
-    val logo: String? = null // Si quieres mostrar el logo
+    val logo: String? = null
 )

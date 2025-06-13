@@ -1,6 +1,5 @@
 package com.example.goalfeed.util
 
-
 import android.content.Context
 import android.widget.Toast
 import com.example.goalfeed.R
