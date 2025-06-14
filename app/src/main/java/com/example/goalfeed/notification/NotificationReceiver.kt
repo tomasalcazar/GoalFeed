@@ -10,16 +10,18 @@ import androidx.core.app.NotificationCompat
 import com.example.goalfeed.R
 import kotlin.random.Random
 
-const val notificationChannelID = "learning_android_notification_channel"
+const val notificationChannelID = "goal_feed_notification_channel"
 
 class NotificationReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
+        val message = intent.getStringExtra("customMessage")
+            ?: "Tienes una nueva notificación de GoalFeed"
         println("DEBUG Llego onReceive NotificationReceiver!")
         createNotificationChannel(context)
 
         val notification = NotificationCompat.Builder(context, notificationChannelID)
-            .setContentTitle("Test")
-            .setContentText("Funciona la notificación")
+            .setContentTitle("GoalFeed")
+            .setContentText(message)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true)
